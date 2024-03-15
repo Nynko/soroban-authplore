@@ -1,10 +1,10 @@
 #![cfg(test)]
 
-use std::println;
-
-extern crate std;
-
-use soroban_sdk::{testutils::{Address as _, MockAuth, MockAuthInvoke}, xdr::{ScErrorCode, ScErrorType, ToXdr}, Address, Env, IntoVal};
+use soroban_sdk::{
+    testutils::{Address as _, MockAuth, MockAuthInvoke},
+    xdr::{ScErrorCode, ScErrorType, ToXdr},
+    Address, Env, IntoVal,
+};
 
 use crate::{Contract, ContractClient};
 
@@ -19,23 +19,18 @@ fn test() {
         let addr = Address::generate(&env);
 
         env.prng().seed(addr.clone().to_xdr(&env).slice(..32));
-        
-        let res = client.mock_auths(&[
-            MockAuth {
+
+        let res = client
+            .mock_auths(&[MockAuth {
                 address: &addr,
                 invoke: &MockAuthInvoke {
                     contract: &contract_id,
                     fn_name: "run",
-                    args: (
-                        env.prng().gen::<u64>(),
-                        0u32,
-                        0u64,
-                        0u128,
-                    ).into_val(&env),
+                    args: (env.prng().gen::<u64>(), 0u32, 0u64, 0u128).into_val(&env),
                     sub_invokes: &[],
                 },
-            },
-        ]).run(&addr);
+            }])
+            .run(&addr);
 
         assert_eq!(res, true);
     });
@@ -44,7 +39,7 @@ fn test() {
     let addr = Address::generate(&env);
 
     assert_eq!(
-        client.try_run(&addr), 
+        client.try_run(&addr),
         Err(Ok(soroban_sdk::Error::from_type_and_code(
             ScErrorType::Context,
             ScErrorCode::InvalidAction
