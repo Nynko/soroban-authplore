@@ -18,6 +18,7 @@ impl Contract {
             0u64.into_val(&env),
             0u128.into_val(&env),
         ]);
+
         true
     }
 }
