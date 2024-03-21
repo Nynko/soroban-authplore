@@ -2,7 +2,7 @@
 
 use soroban_sdk::{
     testutils::{Address as _, MockAuth, MockAuthInvoke},
-    xdr::{ScErrorCode, ScErrorType, ToXdr},
+    xdr::{ScErrorCode, ScErrorType},
     Address, Env, IntoVal,
 };
 
@@ -18,15 +18,13 @@ fn test() {
         let client = ContractClient::new(&env, &contract_id);
         let addr = Address::generate(&env);
 
-        env.prng().seed(addr.clone().to_xdr(&env).slice(..32));
-
         let res = client
             .mock_auths(&[MockAuth {
                 address: &addr,
                 invoke: &MockAuthInvoke {
                     contract: &contract_id,
                     fn_name: "run",
-                    args: (env.prng().gen::<u64>(), 0u32, 0u64, 0u128).into_val(&env),
+                    args: (env.prng().gen::<u64>(), u32::MAX, u64::MAX, u128::MAX).into_val(&env),
                     sub_invokes: &[],
                 },
             }])
