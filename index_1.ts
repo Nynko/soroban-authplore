@@ -40,7 +40,7 @@ let simRes = await rpc.simulateTransaction(simTx)
 
 if (SorobanRpc.Api.isSimulationSuccess(simRes)) {
     simRes.result?.auth.forEach(async (entry) => {
-        const authEntry = await $`echo ${entry.toXDR('base64')} | soroban lab xdr dec --type SorobanAuthorizationEntry --output json`.json()
+        const authEntry = await $`echo ${entry.toXDR('base64')} | stellar xdr dec --type SorobanAuthorizationEntry --output json`.json()
         console.log(JSON.stringify(authEntry, null, 2))
     })
 
